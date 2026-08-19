@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EBMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+    <div class="auth-card">
+        <h1>Create account</h1>
+        <p class="subtitle">Sign up for EBMS</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('auth.register') }}" data-validate="register">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ username }}"
+                       minlength="3" maxlength="20" required autocomplete="username">
+                <div class="hint">3–20 characters, letters/numbers/underscore only.</div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ email }}"
+                       required autocomplete="email">
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       minlength="8" maxlength="64" required autocomplete="new-password">
+                <ul class="pw-rules" id="pw-rules">
+                    <li data-rule="length">8–64 characters</li>
+                    <li data-rule="lower">One lowercase letter</li>
+                    <li data-rule="upper">One uppercase letter</li>
+                    <li data-rule="digit">One digit</li>
+                    <li data-rule="special">One special character (!@#$%...)</li>
+                </ul>
+            </div>
+
+            <div class="field">
+                <label for="confirm_password">Confirm password</label>
+                <input type="password" id="confirm_password" name="confirm_password"
+                       required autocomplete="new-password">
+            </div>
+
+            <div class="field">
+                <label>Security questions</label>
+                <div class="hint">
+                    Answer at least 3 of these. If you ever forget your password, we'll ask
+                    you these same questions to help you get back in.
+                </div>
+                {% for question in questions %}
+                <div class="security-question">
+                    <label for="security_answer_{{ question.id }}">{{ question.text }}</label>
+                    <input type="text" id="security_answer_{{ question.id }}"
+                           name="security_answer_{{ question.id }}" maxlength="100"
+                           autocomplete="off">
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="submit-btn">Create account</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>

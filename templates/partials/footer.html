@@ -1,0 +1,43 @@
+<footer class="site-footer">
+    <div class="footer-inner container">
+        <div class="footer-brand">
+            <a class="brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo/ebms-logo.png') }}" alt="EBMS logo">
+                <span>EBMS</span>
+            </a>
+            <p class="footer-tagline">Every bill, tracked and managed in one place.</p>
+        </div>
+
+        {% for group in footer_link_groups %}
+        <div class="footer-col">
+            <h4>{{ group.title }}</h4>
+            <ul>
+                {% for link in group.links %}
+                <li>
+                    {% if link.endpoint %}
+                        <a href="{{ url_for(link.endpoint) }}" class="footer-link">{{ link.label }}</a>
+                    {% else %}
+                        <a href="javascript:void(0)" class="placeholder-link" title="Coming soon">{{ link.label }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+
+        <div class="footer-cta">
+            <h4>Get started</h4>
+            <p>Create your free account and start tracking your bills today.</p>
+            <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Create account</a>
+        </div>
+    </div>
+
+    <div class="footer-bottom container">
+        <p>&copy; {{ current_year }} EBMS. All rights reserved.</p>
+        <div class="footer-bottom-links">
+            {% for link in footer_bottom_links %}
+            <a href="javascript:void(0)" class="placeholder-link" title="Coming soon">{{ link }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</footer>

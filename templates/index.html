@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}EBMS - Electric Bill Management{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-badge"><span class="dot"></span> {{ hero.badge }}</div>
+    <h1>Manage your <span class="text-gradient">electricity bills</span>, effortlessly.</h1>
+    <p class="hero-subtitle">{{ hero.subtitle }}</p>
+    <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}">Get started</a>
+        <a class="btn btn-outline btn-lg" href="{{ url_for('auth.login') }}">Log in</a>
+    </div>
+</section>
+
+<section class="highlights" data-reveal>
+    {% for item in highlights %}
+    <div class="highlight-chip"><span>{{ item.icon }}</span> {{ item.title }}</div>
+    {% endfor %}
+    <div class="highlights-more"><a href="{{ url_for('features') }}">See all features &rarr;</a></div>
+</section>
+
+<section class="cta-banner" data-reveal>
+    <h2>Curious how it works?</h2>
+    <p>See everything EBMS does, and the idea behind why we built it.</p>
+    <a class="btn btn-primary" href="{{ url_for('features') }}">Explore features</a>
+    <a class="btn btn-outline" href="{{ url_for('about') }}">About EBMS</a>
+</section>
+{% endblock %}

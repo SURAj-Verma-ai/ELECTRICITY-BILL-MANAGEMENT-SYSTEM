@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EBMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+    <div class="auth-card">
+        <h1>Welcome, {{ username }} 👋</h1>
+        <p class="subtitle">You're logged into EBMS.</p>
+        <div class="auth-footer">
+            <a href="{{ url_for('auth.change_password_page') }}">Change password</a>
+            &nbsp;&middot;&nbsp;
+            <a href="{{ url_for('auth.logout') }}">Log out</a>
+        </div>
+    </div>
+</body>
+</html>

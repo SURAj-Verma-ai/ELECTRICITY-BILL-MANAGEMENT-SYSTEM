@@ -1,0 +1,45 @@
+<header class="site-header">
+    <div class="nav-container">
+        <a class="brand" href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo/ebms-logo.png') }}" alt="EBMS logo">
+            <span>EBMS</span>
+        </a>
+
+        <nav class="nav-links desktop-only">
+            <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">Home</a>
+            <a href="{{ url_for('features') }}" class="{{ 'active' if request.endpoint == 'features' else '' }}">Features</a>
+            <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
+        </nav>
+
+        <div class="nav-actions desktop-only">
+            {% if session.get('user_id') %}
+                <span class="nav-greeting">Hi, {{ session.get('username') }}</span>
+                <a class="btn btn-outline" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="btn btn-outline" href="{{ url_for('auth.logout') }}">Log out</a>
+            {% else %}
+                <a class="btn btn-outline" href="{{ url_for('auth.login') }}">Log in</a>
+                <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Sign up</a>
+            {% endif %}
+        </div>
+
+        <button id="nav-toggle" class="hamburger" type="button"
+                aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <div id="mobile-menu" class="mobile-menu">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('features') }}">Features</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <div class="mobile-menu-actions">
+            {% if session.get('user_id') %}
+                <a class="btn btn-outline" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="btn btn-outline" href="{{ url_for('auth.logout') }}">Log out</a>
+            {% else %}
+                <a class="btn btn-outline" href="{{ url_for('auth.login') }}">Log in</a>
+                <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Sign up</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
