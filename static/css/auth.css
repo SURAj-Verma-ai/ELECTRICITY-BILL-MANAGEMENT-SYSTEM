@@ -1,0 +1,194 @@
+:root {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --accent: #22c55e;
+    --accent-hover: #16a34a;
+    --error: #f87171;
+    --error-bg: #451a1a;
+    --success: #4ade80;
+    --success-bg: #14351f;
+    --input-bg: #0f172a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 24px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+}
+
+.auth-card h1 {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+}
+
+.auth-card .subtitle {
+    margin: 0 0 24px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.field input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.security-question {
+    margin-top: 12px;
+}
+
+.security-question label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.security-question input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.security-question input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.field .hint {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.field .hint a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.field .hint a:hover {
+    text-decoration: underline;
+}
+
+/* Password rule checklist */
+.pw-rules {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    font-size: 0.78rem;
+}
+
+.pw-rules li {
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.pw-rules li.valid {
+    color: var(--success);
+}
+
+.pw-rules li::before {
+    content: "\2717  ";
+}
+
+.pw-rules li.valid::before {
+    content: "\2713  ";
+}
+
+button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #06210f;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+button.submit-btn:hover {
+    background: var(--accent-hover);
+}
+
+.auth-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.auth-footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.flash {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.flash.error {
+    background: var(--error-bg);
+    color: var(--error);
+    border: 1px solid var(--error);
+}
+
+.flash.success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
