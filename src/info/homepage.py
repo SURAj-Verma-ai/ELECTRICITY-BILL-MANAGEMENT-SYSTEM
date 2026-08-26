@@ -15,6 +15,25 @@ HIGHLIGHTS = [
     {"icon": "🔒", "title": "Secure Access"},
 ]
 
+# Shown on the home page to explain the process in three simple steps.
+HOW_IT_WORKS = [
+    {
+        "icon": "📝",
+        "title": "Create your account",
+        "description": "Sign up in under two minutes with just a username, email, and password.",
+    },
+    {
+        "icon": "⚡",
+        "title": "Track your usage",
+        "description": "Log your electricity usage and bills as they come in, all in one dashboard.",
+    },
+    {
+        "icon": "📈",
+        "title": "Stay ahead",
+        "description": "See trends, get organized, and never lose track of a due date again.",
+    },
+]
+
 FEATURES_INTRO = "Everything you need to stay on top of your electricity bills, in one place."
 
 FEATURES = [
