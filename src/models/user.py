@@ -4,27 +4,20 @@ from src.data.database import get_cursor, IntegrityError
 
 
 class DuplicateUserError(Exception):
-    """Raised when a UNIQUE constraint (username or email) is violated.
-
-    This is the safety net for the check-then-insert race: two requests can
-    both pass `username_exists`/`email_exists` before either commits, so the
-    database's own constraint is the real source of truth.
-    """
-
+    # happens if two signups race each other at the same time
     def __init__(self, field: str):
-        self.field = field  # "username", "email", or "unknown"
+        self.field = field
         super().__init__(field)
 
 
 class User:
-    def __init__(self, id, username, email, password_hash, is_active=True, **_extra):
-        # **_extra swallows other columns (created_at, last_login_at, ...)
-        # so this stays a thin wrapper without needing to enumerate every column.
+    def __init__(self, id, username, email, password_hash, is_active=True, is_admin=False, **_extra):
         self.id = id
         self.username = username
         self.email = email
         self.password_hash = password_hash
         self.is_active = is_active
+        self.is_admin = bool(is_admin)
 
     @staticmethod
     def create(username: str, email: str, password_hash: str) -> int:
@@ -59,8 +52,6 @@ class User:
 
     @staticmethod
     def find_by_id(user_id: int):
-        # Used during password recovery: once we know WHICH user is
-        # recovering (by their id), we need their full record again.
         with get_cursor() as cursor:
             cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
             row = cursor.fetchone()
@@ -87,11 +78,29 @@ class User:
 
     @staticmethod
     def update_password(user_id: int, new_password_hash: str):
-        # Used by both "change password" (user is logged in and remembers
-        # the old one) and "forgot password" (user proved who they are via
-        # security questions instead).
         with get_cursor(commit=True) as cursor:
             cursor.execute(
                 "UPDATE users SET password_hash = %s WHERE id = %s",
                 (new_password_hash, user_id),
+            )
+
+    @staticmethod
+    def list_all():
+        # used on the admin users page
+        with get_cursor() as cursor:
+            cursor.execute("SELECT * FROM users ORDER BY id DESC")
+            return [User(**row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def count():
+        with get_cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) AS total FROM users")
+            return cursor.fetchone()["total"]
+
+    @staticmethod
+    def set_admin(user_id: int, is_admin: bool):
+        with get_cursor(commit=True) as cursor:
+            cursor.execute(
+                "UPDATE users SET is_admin = %s WHERE id = %s",
+                (1 if is_admin else 0, user_id),
             )

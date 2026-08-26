@@ -10,7 +10,7 @@ import bcrypt
 
 from src.models.user import User, DuplicateUserError
 from src.models.security_answer import SecurityAnswer
-from src.content.security_questions import QUESTIONS, MIN_SECURITY_ANSWERS
+from src.info.security_questions import QUESTIONS, MIN_SECURITY_ANSWERS
 from src.utils.validators import (
     validate_username,
     validate_email,
