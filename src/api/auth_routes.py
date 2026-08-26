@@ -12,9 +12,9 @@ from src.services.auth_service import (
     reset_password,
     AuthError,
 )
-from src.content.security_questions import QUESTIONS
-from src.utils.decorators import login_required
-from src.extensions import limiter
+from src.info.security_questions import QUESTIONS
+from src.utils.guards import login_required
+from src.rate_limiter import limiter
 
 auth_bp = Blueprint("auth", __name__)
 
