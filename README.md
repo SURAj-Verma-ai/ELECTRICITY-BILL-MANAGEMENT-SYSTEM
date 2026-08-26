@@ -1,66 +1,47 @@
-# EBMS — Electric Bill Management System
+# EBMS (Electricity Bill Management System)
 
-A production-grade web application for managing electricity billing, built with Flask. EBMS provides secure user accounts, authentication with self-service password recovery, and a dashboard foundation for tracking and analyzing electric bills — structured from the ground up for real deployment (Docker, CI/CD, monitoring, and infrastructure-as-code included).
+This is a very simple flask app for managing electricity bills. Users here can register,
+log in, track their bills, and file complaints. Admins can manage the users
+and complaints from a separate panel.
 
-## Features
-
-- **Authentication** — registration, login/logout, and change-password flows with hashed credentials
-- **Self-service password recovery** — security-question based recovery (no email dependency required)
-- **Rate limiting** — brute-force protection on login and recovery endpoints via Flask-Limiter
-- **Session-based access control** — `@login_required` route protection and a working dashboard
-- **Marketing pages** — home, features, and about pages driven by content modules
-- **Database layer** — SQLAlchemy models with Alembic migrations
-- **Deployment-ready** — Docker/Docker Compose, Nginx config, Prometheus monitoring, and Terraform/Kubernetes manifests under `infra/`
-
-## Tech Stack
-
-- **Backend:** Python, Flask
-- **Database:** SQLAlchemy ORM, Alembic migrations
-- **Security:** Flask-Limiter (rate limiting), hashed passwords, security-question recovery
-- **Testing:** Pytest (unit + integration)
-- **Infra:** Docker, Docker Compose, Nginx, Prometheus, Terraform, Kubernetes
-
-## Project Structure
-
-See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for the full directory layout and architectural notes.
+## Tech Stack Used
+- Python, Flask
+- SQLite for local development, MySQL for production (switches automatically based on `APP_ENV`)
+- Passwords hashed with bcrypt
+- Rate limiting on login/register/recovery via Flask-Limiter
 
 ## Getting Started
 
 ```bash
-# Clone and enter the project
-git clone https://github.com/<your-username>/ebms.git
-cd ebms
-
-# Set up environment
-cp .env.example .env
 python -m venv venv
-source venv/bin/activate   # venv\Scripts\activate on Windows
-pip install -r requirements/dev.txt
+venv\Scripts\activate      # on Windows Use this
+source venv/bin/activate   # on Mac/Linux use this
+pip install -r requirements.txt
+copy .env.example .env
 
-# Run database migrations
-alembic upgrade head
-
-# Start the development server
 python app.py
 ```
 
-The app runs on `http://localhost:8000` by default (configurable via `.env`).
+The app runs at `http://localhost:8000` by default. In development mode
+it uses a local SQLite file (`database/ebms_dev.db`) so no database setup
+is needed to get started.
 
-## Running Tests
+## Switching to production
+Set `APP_ENV=production` in `.env` and fill in the `DB_*` values for a
+MySQL database. The app picks the right database automatically, see
+`src/data/database.py`.
 
-```bash
-pytest                  # run all tests
-pytest -m unit          # unit tests only
-pytest -m integration   # integration tests only
-pytest --cov=src        # with coverage
+## Project Layout
+
 ```
-
-## Docker
-
-```bash
-docker-compose up -d
+app.py              entry point, routes for home/features/about/dashboard
+src/api/             route blueprints (auth, bills, complaints, admin)
+src/services/        business logic, one file per feature
+src/models/          database access, one file per table
+src/utils/           validators, login/admin guards
+src/info/            page copy, security questions, billing config
+src/data/            database connection setup
+database/            SQL schema files
+templates/           HTML pages
+static/              CSS, JS, images
 ```
-
-## License
-
-MIT
