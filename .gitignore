@@ -10,11 +10,3 @@ venv/
 # Development database (SQLite)
 database/*.db
 database/*.db-journal
-
-# Logs
-logs/*.log
-
-# Coverage / test artifacts
-.pytest_cache/
-htmlcov/
-.coverage
