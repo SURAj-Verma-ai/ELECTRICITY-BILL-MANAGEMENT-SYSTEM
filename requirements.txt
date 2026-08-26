@@ -1,0 +1,5 @@
+flask
+flask-limiter
+python-dotenv
+bcrypt #for passwords and secuirty
+mysql-connector-python 
