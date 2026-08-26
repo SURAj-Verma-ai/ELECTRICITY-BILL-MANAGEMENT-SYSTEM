@@ -41,3 +41,13 @@ LINK_GROUPS = [
 ]
 
 BOTTOM_LINKS = ["Status", "Documentation", "Contact"]
+
+# shown as cards above the footer, all placeholder for now
+IMPORTANT_LINKS = [
+    {"icon": "\U0001F4C4", "label": "Billing Guide"},
+    {"icon": "\U0001F4CA", "label": "Tariff Info"},
+    {"icon": "\U0001F4DE", "label": "Support Center"},
+    {"icon": "\U0001F4DD", "label": "Grievance Cell"},
+    {"icon": "\U0001F310", "label": "Open Data"},
+    {"icon": "\U0001F4E6", "label": "Consumer Portal"},
+]
