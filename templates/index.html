@@ -20,10 +20,35 @@
     <div class="highlights-more"><a href="{{ url_for('features') }}">See all features &rarr;</a></div>
 </section>
 
+<section class="how-it-works">
+    <div class="section-heading" data-reveal>
+        <h2>How it works</h2>
+        <p>Three steps, no learning curve.</p>
+    </div>
+    <div class="features">
+        {% for step in how_it_works %}
+        <div class="feature-card" data-reveal style="transition-delay: {{ loop.index0 * 0.08 }}s">
+            <div class="feature-icon">{{ step.icon }}</div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="review-teaser">
+    <div class="review-card review-teaser-card" data-reveal>
+        <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="review-quote">"{{ review.quote }}"</p>
+        <p class="review-author"><strong>{{ review.author }}</strong>, {{ review.role }}</p>
+    </div>
+    <a class="link-more" href="{{ url_for('about') }}#reviews">Read more reviews &rarr;</a>
+</section>
+
 <section class="cta-banner" data-reveal>
-    <h2>Curious how it works?</h2>
-    <p>See everything EBMS does, and the idea behind why we built it.</p>
-    <a class="btn btn-primary" href="{{ url_for('features') }}">Explore features</a>
+    <h2>Ready to get started?</h2>
+    <p>Create a free account and take the first step toward simpler billing.</p>
+    <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Create account</a>
     <a class="btn btn-outline" href="{{ url_for('about') }}">About EBMS</a>
 </section>
 {% endblock %}
