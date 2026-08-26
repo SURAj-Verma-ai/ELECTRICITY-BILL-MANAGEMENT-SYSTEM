@@ -1,3 +1,21 @@
+<section class="important-links">
+    <h2>Important Links</h2>
+    <div class="section-underline"></div>
+
+    <div class="links-strip-wrap">
+        <button id="strip-prev" class="strip-arrow prev" type="button" aria-label="Scroll left">&#8249;</button>
+        <div class="links-strip" id="links-strip">
+            {% for link in important_links %}
+            <a href="javascript:void(0)" class="link-card" title="Coming soon">
+                <span class="link-icon">{{ link.icon }}</span>
+                <span class="link-label">{{ link.label }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <button id="strip-next" class="strip-arrow next" type="button" aria-label="Scroll right">&#8250;</button>
+    </div>
+</section>
+
 <footer class="site-footer">
     <div class="footer-inner container">
         <div class="footer-brand">
@@ -32,12 +50,15 @@
         </div>
     </div>
 
-    <div class="footer-bottom container">
-        <p>&copy; {{ current_year }} EBMS. All rights reserved.</p>
-        <div class="footer-bottom-links">
-            {% for link in footer_bottom_links %}
-            <a href="javascript:void(0)" class="placeholder-link" title="Coming soon">{{ link }}</a>
-            {% endfor %}
+    <div class="footer-info-band">
+        <div class="footer-info-inner">
+            <p><strong>EBMS</strong> is a student project, not a real utility provider.</p>
+            <div class="footer-bottom-links">
+                <span>&copy; {{ current_year }} EBMS</span>
+                {% for link in footer_bottom_links %}
+                <a href="javascript:void(0)" title="Coming soon">{{ link }}</a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </footer>
