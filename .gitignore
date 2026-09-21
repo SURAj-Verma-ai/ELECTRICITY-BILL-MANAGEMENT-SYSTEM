@@ -1,12 +1,17 @@
-# Environment
-.env
 
-# Python
 __pycache__/
 *.pyc
-.venv/
-venv/
+*.pyo
 
-# Development database (SQLite)
-database/*.db
-database/*.db-journal
+
+venv/
+env/
+.env
+
+
+*.db
+*.sqlite3
+
+
+.DS_Store
+Thumbs.db

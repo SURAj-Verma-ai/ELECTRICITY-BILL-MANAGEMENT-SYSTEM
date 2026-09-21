@@ -3,12 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | EBMS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <title>Admin Panel - PowerPay</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #1a365d;
+            padding: 14px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        h2.title {
+            color: #1a365d;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #475569;
+        }
+
+        .tab-btn.active {
+            background: #2b6cb0;
+            color: #ffffff;
+            border-color: #2b6cb0;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .form-box {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 24px;
+            max-width: 550px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .form-box h3 {
+            margin-bottom: 15px;
+            color: #2b6cb0;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2b6cb0;
+        }
+
+        .btn-submit {
+            background-color: #2b6cb0;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background-color: #2c5282;
+        }
+
+        .table-section {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .table-section h3 {
+            margin-bottom: 12px;
+            color: #1a365d;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #333155;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-paid { background: #dcfce7; color: #166534; }
+        .badge-unpaid { background: #fee2e2; color: #991b1b; }
+        .badge-resolved { background: #dcfce7; color: #166534; }
+        .badge-progress { background: #e0f2fe; color: #0369a1; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+
+        .actions-cell {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn-status {
+            padding: 4px 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .btn-progress {
+            background-color: #0284c7;
+            color: white;
+        }
+
+        .btn-progress:hover {
+            background-color: #0369a1;
+        }
+
+        .btn-resolve {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-resolve:hover {
+            background-color: #059669;
+        }
+
+        footer {
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: auto;
+        }
+    </style>
 </head>
 <body>
 
-    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <nav class="navbar">
+        <a href="/">PowerPay Admin</a>
+        <a href="/">&larr; Back to Home</a>
+    </nav>
+
+    <div class="container">
+        <h2 class="title">Admin Control Dashboard</h2>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('tab-add', this)">1. Add Consumer</button>
+            <button class="tab-btn" onclick="showTab('tab-bill', this)">2. Generate Bill</button>
+            <button class="tab-btn" onclick="showTab('tab-data', this)">3. View Database Records</button>
+        </div>
+
+        <div id="tab-add" class="tab-panel active">
+            <div class="form-box">
+                <h3>Register Consumer</h3>
+                <form method="POST">
+                    <div class="form-group">
+                        <label>Consumer Full Name</label>
+                        <input type="text" name="name" placeholder="e.g. Ramesh Sharma" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Meter Number</label>
+                        <input type="text" name="meter_no" placeholder="e.g. MTR-1001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" placeholder="e.g. Flat 204, Green Park" required>
+                    </div>
+                    <button type="submit" name="add_consumer" class="btn-submit">Add Consumer</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="tab-bill" class="tab-panel">
+            <div class="form-box">
+                <h3>Generate Monthly Bill</h3>
+                <form method="POST">
+                    <div class="form-group">
+                        <label>Select Consumer</label>
+                        <select name="consumer_id" required>
+                            <option value="">-- Choose Consumer --</option>
+                            {% for c in consumers %}
+                                <option value="{{ c.id }}">{{ c.name }} (Meter: {{ c.meter_no }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Billing Month</label>
+                        <input type="month" name="month" onclick="this.showPicker()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Units Consumed (kWh)</label>
+                        <input type="number" name="units" min="0" placeholder="e.g. 150" required>
+                    </div>
+                    <button type="submit" name="generate_bill" class="btn-submit">Generate Bill</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="tab-data" class="tab-panel">
+            
+            <div class="table-section">
+                <h3>Registered Consumers ({{ consumers|length }})</h3>
+                {% if consumers %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Meter No</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in consumers %}
+                        <tr>
+                            <td>{{ c.id }}</td>
+                            <td>{{ c.name }}</td>
+                            <td>{{ c.meter_no }}</td>
+                            <td>{{ c.address }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color: #64748b; font-size: 0.9rem;">No consumers added yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="table-section">
+                <h3>Generated Bills ({{ bills|length }})</h3>
+                {% if bills %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>Name</th>
+                            <th>Meter No</th>
+                            <th>Month</th>
+                            <th>Units</th>
+                            <th>Amount (₹)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bills %}
+                        <tr>
+                            <td>#{{ b.id }}</td>
+                            <td>{{ b.name }}</td>
+                            <td>{{ b.meter_no }}</td>
+                            <td>{{ b.month }}</td>
+                            <td>{{ b.units }}</td>
+                            <td>₹{{ "%.2f"|format(b.amount) }}</td>
+                            <td>
+                                <span class="badge {% if b.status == 'Paid' %}badge-paid{% else %}badge-unpaid{% endif %}">
+                                    {{ b.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color: #64748b; font-size: 0.9rem;">No bills generated yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="table-section">
+                <h3>Consumer Complaints ({{ complaints|length }})</h3>
+                {% if complaints %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Consumer</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cmp in complaints %}
+                        <tr>
+                            <td>#{{ cmp.id }}</td>
+                            <td>{{ cmp.name }}</td>
+                            <td>{{ cmp.category }}</td>
+                            <td>{{ cmp.description }}</td>
+                            <td>
+                                {% if cmp.status == 'Resolved' %}
+                                    <span class="badge badge-resolved">{{ cmp.status }}</span>
+                                {% elif cmp.status == 'In Progress' %}
+                                    <span class="badge badge-progress">{{ cmp.status }}</span>
+                                {% else %}
+                                    <span class="badge badge-pending">{{ cmp.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    {% if cmp.status != 'In Progress' and cmp.status != 'Resolved' %}
+                                        <a href="/update_complaint/{{ cmp.id }}/In Progress" class="btn-status btn-progress">In Progress</a>
+                                    {% endif %}
+                                    
+                                    {% if cmp.status != 'Resolved' %}
+                                        <a href="/update_complaint/{{ cmp.id }}/Resolved" class="btn-status btn-resolve">Resolve</a>
+                                    {% else %}
+                                        <span style="color: #64748b; font-size: 0.85rem;">Completed</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color: #64748b; font-size: 0.9rem;">No complaints filed yet.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+
 </body>
 </html>
