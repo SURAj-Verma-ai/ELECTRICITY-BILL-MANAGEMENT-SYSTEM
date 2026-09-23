@@ -1,191 +1,320 @@
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File a Complaint - PowerPay</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-app = Flask(__name__)
-DB_NAME = "ebill.db"
-UNIT_RATE = 7.0
+        body {
+            color: #222;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-def get_db():
-    conn = sqlite3.connect(DB_NAME)
-    conn.row_factory = sqlite3.Row
-    return conn
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 6vw;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-def init_db():
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS consumers (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                meter_no TEXT UNIQUE NOT NULL,
-                address TEXT NOT NULL
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS bills (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                consumer_id INTEGER,
-                month TEXT NOT NULL,
-                units INTEGER NOT NULL,
-                amount REAL NOT NULL,
-                status TEXT DEFAULT 'Unpaid',
-                FOREIGN KEY (consumer_id) REFERENCES consumers (id)
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS complaints (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                consumer_id INTEGER,
-                category TEXT NOT NULL,
-                description TEXT NOT NULL,
-                status TEXT DEFAULT 'Pending',
-                FOREIGN KEY (consumer_id) REFERENCES consumers (id)
-            )
-        """)
-        conn.commit()
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #111;
+        }
 
-init_db()
+        .brand img { width: 36px; height: 36px; }
+        .brand span { font-weight: bold; font-size: 19px; }
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+        .nav ul { list-style: none; display: flex; gap: 34px; }
+        .nav ul a { color: #444; text-decoration: none; font-size: 15px; }
+        .nav ul a:hover { text-decoration: underline; }
+        .nav ul a.active { color: #111; font-weight: bold; }
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
-    conn = get_db()
-    cursor = conn.cursor()
+        .loginbtn {
+            background: #1a365d;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 9px 20px;
+            border-radius: 4px;
+        }
+        .loginbtn:hover { background: #12233d; }
 
-    if request.method == 'POST':
-        if 'add_consumer' in request.form:
-            name = request.form.get('name', '').strip()
-            meter_no = request.form.get('meter_no', '').strip()
-            address = request.form.get('address', '').strip()
+        .container {
+            padding: 35px 6vw;
+            flex: 1;
+            width: 100%;
+        }
 
-            if name and meter_no and address:
-                try:
-                    cursor.execute("INSERT INTO consumers (name, meter_no, address) VALUES (?, ?, ?)", 
-                                   (name, meter_no, address))
-                    conn.commit()
-                except sqlite3.IntegrityError:
-                    pass
+        .container.split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 50px;
+            align-items: center;
+        }
 
-        if 'generate_bill' in request.form:
-            consumer_id_raw = request.form.get('consumer_id')
-            month = request.form.get('month', '').strip()
-            units_raw = request.form.get('units')
+        .side-gif {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+        }
 
-            if consumer_id_raw and month and units_raw is not None:
-                try:
-                    consumer_id = int(consumer_id_raw)
-                    units = max(0, int(units_raw))
-                    total_amount = round(units * UNIT_RATE, 2)
-                    cursor.execute("INSERT INTO bills (consumer_id, month, units, amount, status) VALUES (?, ?, ?, ?, 'Unpaid')",
-                                   (consumer_id, month, units, total_amount))
-                    conn.commit()
-                except (ValueError, TypeError):
-                    pass
+        h1 {
+            font-size: 24px;
+            color: #111;
+            margin-bottom: 20px;
+        }
 
-    consumers = cursor.execute("SELECT * FROM consumers ORDER BY id DESC").fetchall()
-    bills = cursor.execute("""
-        SELECT bills.id, consumers.name, consumers.meter_no, bills.month, bills.units, bills.amount, bills.status
-        FROM bills 
-        JOIN consumers ON bills.consumer_id = consumers.id
-        ORDER BY bills.id DESC
-    """).fetchall()
-    complaints = cursor.execute("""
-        SELECT complaints.id, consumers.name, complaints.category, complaints.description, complaints.status
-        FROM complaints 
-        JOIN consumers ON complaints.consumer_id = consumers.id
-        ORDER BY complaints.id DESC
-    """).fetchall()
+        .form-box {
+            margin-bottom: 30px;
+            padding-bottom: 26px;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-    conn.close()
-    return render_template('admin.html', consumers=consumers, bills=bills, complaints=complaints)
+        .form-box p.subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
-@app.route('/update_complaint/<int:complaint_id>/<string:new_status>')
-def update_complaint(complaint_id, new_status):
-    valid_statuses = ['Pending', 'In Progress', 'Resolved']
-    if new_status in valid_statuses:
-        conn = get_db()
-        conn.execute("UPDATE complaints SET status = ? WHERE id = ?", (new_status, complaint_id))
-        conn.commit()
-        conn.close()
-    return redirect(url_for('admin'))
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #334155;
+            margin-bottom: 6px;
+        }
 
-@app.route('/consumer', methods=['GET', 'POST'])
-def consumer():
-    consumer_data = None
-    bills = []
-    searched = False
-    meter_no = ""
+        .field {
+            margin-bottom: 16px;
+        }
 
-    if request.method == 'POST':
-        searched = True
-        meter_no = request.form.get('meter_no', '').strip()
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-        conn = get_db()
-        cursor = conn.cursor()
-        consumer_data = cursor.execute(
-            "SELECT * FROM consumers WHERE UPPER(TRIM(meter_no)) = UPPER(?)", 
-            (meter_no,)
-        ).fetchone()
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' stroke='%23555' stroke-width='1.6' fill='none' fill-rule='evenodd'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
 
-        if consumer_data:
-            bills = cursor.execute(
-                "SELECT * FROM bills WHERE consumer_id = ? ORDER BY id DESC", 
-                (consumer_data['id'],)
-            ).fetchall()
+        select:focus {
+            outline: none;
+            border-color: #1a365d;
+        }
 
-        conn.close()
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
 
-    return render_template('consumer.html', consumer=consumer_data, bills=bills, searched=searched, meter_no=meter_no)
+        button[type="submit"] {
+            background-color: #1a365d;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
 
-@app.route('/pay_bill/<int:bill_id>')
-def pay_bill(bill_id):
-    conn = get_db()
-    conn.execute("UPDATE bills SET status = 'Paid' WHERE id = ?", (bill_id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('consumer'))
+        button[type="submit"]:hover {
+            background-color: #12233d;
+        }
 
-@app.route('/complaints', methods=['GET', 'POST'])
-def complaints():
-    user_complaints = []
-    message = None
-    meter_no = ""
+        .message {
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
-    if request.method == 'POST':
-        meter_no = request.form.get('meter_no', '').strip()
-        category = request.form.get('category')
-        description = request.form.get('description', '').strip()
+        .message-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
 
-        conn = get_db()
-        cursor = conn.cursor()
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
 
-        user = cursor.execute(
-            "SELECT * FROM consumers WHERE UPPER(TRIM(meter_no)) = UPPER(?)", 
-            (meter_no,)
-        ).fetchone()
+        .result-card h3 {
+            color: #111;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
 
-        if user:
-            cursor.execute(
-                "INSERT INTO complaints (consumer_id, category, description, status) VALUES (?, ?, ?, 'Pending')",
-                (user['id'], category, description)
-            )
-            conn.commit()
-            message = "Complaint registered successfully! Our team will look into it."
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
 
-            user_complaints = cursor.execute(
-                "SELECT * FROM complaints WHERE consumer_id = ? ORDER BY id DESC", 
-                (user['id'],)
-            ).fetchall()
-        else:
-            message = f"No consumer found with meter number '{meter_no}'."
+        th {
+            text-align: left;
+            padding: 8px 16px 8px 0;
+            border-bottom: 2px solid #222;
+            color: #333;
+            font-size: 13px;
+        }
 
-        conn.close()
+        td {
+            padding: 10px 16px 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-    return render_template('complaints.html', complaints=user_complaints, message=message, meter_no=meter_no)
+        .badge-pending {
+            color: #854d0e;
+            font-weight: bold;
+        }
 
-if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+        .badge-progress {
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .badge-resolved {
+            color: #166534;
+            font-weight: bold;
+        }
+
+        footer {
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 16px;
+            font-size: 13px;
+            color: #777;
+            margin-top: auto;
+        }
+
+        @media (max-width: 800px) {
+            .nav ul { display: none; }
+            .container.split { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a class="brand" href="/">
+            <img src="{{ url_for('static', filename='images/logo/ebms-logo.png') }}" alt="">
+            <span>PowerPay</span>
+        </a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/consumer">Pay Bill</a></li>
+            <li><a href="/complaints" class="active">Complaints</a></li>
+            <li><a href="/admin">Admin</a></li>
+        </ul>
+        <a class="loginbtn" href="/login">Log in</a>
+    </div>
+
+    <div class="container split">
+        <div class="form-col">
+            <h1>File a Complaint</h1>
+
+            {% if message %}
+                <div class="message {% if complaints %}message-success{% else %}message-error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <div class="form-box">
+                <p class="subtitle">Report power interruptions, meter faults, or billing issues using your meter number.</p>
+
+                <form method="POST">
+                    <div class="field">
+                        <label for="meter_no">Meter Number</label>
+                        <input type="text" id="meter_no" name="meter_no" placeholder="e.g. MTR-1001" value="{{ meter_no or '' }}" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="Power Interruption">Power Interruption</option>
+                            <option value="Meter Fault">Meter Fault</option>
+                            <option value="Billing">Billing Issue</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" placeholder="Describe the issue in detail..." required></textarea>
+                    </div>
+
+                    <button type="submit">Submit Complaint</button>
+                </form>
+            </div>
+
+            {% if complaints %}
+                <div>
+                    <h3>Your Complaint History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in complaints %}
+                            <tr>
+                                <td>#{{ c.id }}</td>
+                                <td>{{ c.category }}</td>
+                                <td>{{ c.description }}</td>
+                                <td>
+                                    <span class="{% if c.status == 'Resolved' %}badge-resolved{% elif c.status == 'In Progress' %}badge-progress{% else %}badge-pending{% endif %}">
+                                        {{ c.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="media-col">
+            <img src="{{ url_for('static', filename='images/consumer/comp-31-1_1745332949.gif') }}" alt="" class="side-gif">
+        </div>
+    </div>
+
+    <footer>
+        PowerPay Complaints &copy; 2026
+    </footer>
+
+</body>
+</html>

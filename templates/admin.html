@@ -13,62 +13,176 @@
         }
 
         body {
-            background-color: #f4f6f9;
-            color: #333;
+            color: #222;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        .navbar {
-            background-color: #1a365d;
-            padding: 14px 10%;
+        .nav {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 20px 6vw;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .navbar a {
-            color: #ffffff;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             text-decoration: none;
+            color: #111;
+        }
+
+        .brand img { width: 36px; height: 36px; }
+        .brand span { font-weight: bold; font-size: 19px; }
+
+        .nav ul { list-style: none; display: flex; gap: 34px; }
+        .nav ul a { color: #444; text-decoration: none; font-size: 15px; }
+        .nav ul a:hover { text-decoration: underline; }
+        .nav ul a.active { color: #111; font-weight: bold; }
+
+        .logoutbtn {
+            background: #1a365d;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 9px 20px;
+            border-radius: 4px;
+        }
+        .logoutbtn:hover { background: #12233d; }
+
+        /* body area below top nav: sidebar + main, stretches to fill remaining height */
+        .app {
+            flex: 1;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .side-rail {
+            width: 210px;
+            flex-shrink: 0;
+            border-right: 1px solid #e2e8f0;
+            padding: 60px 0 22px;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: width .25s ease, opacity .2s ease, padding .25s ease;
+        }
+
+        .side-rail.collapsed {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            opacity: 0;
+            border-right: none;
+        }
+
+        .side-label {
+            padding: 0 22px 8px;
+            font-size: 11px;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: #94a3b8;
             font-weight: bold;
         }
 
-        .container {
-            max-width: 1050px;
-            margin: 30px auto;
-            padding: 0 20px;
-            flex: 1;
+        .side-link {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-left: 2px solid transparent;
+            padding: 9px 22px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: color .15s ease, border-color .15s ease;
         }
+
+        .side-link:hover { color: #111; }
+
+        .side-link.active {
+            color: #111;
+            font-weight: bold;
+            border-left: 2px solid #1a365d;
+        }
+
+        .backdrop { display: none; }
+
+        /* main column */
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            padding: 24px 6vw 0;
+        }
+
+        .side-toggle {
+            position: fixed;
+            top: 92px;
+            left: 22px;
+            z-index: 60;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .side-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: #555;
+            transition: background-color .15s ease;
+        }
+
+        .side-toggle:hover span { background: #111; }
 
         h2.title {
-            color: #1a365d;
-            margin-bottom: 20px;
+            color: #111;
+            font-size: 22px;
         }
 
-        .tabs {
+        .container {
+            padding: 20px 6vw 30px;
+            width: 100%;
+        }
+
+        .stats {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #cbd5e1;
-            padding-bottom: 8px;
+            margin-bottom: 30px;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .tab-btn {
-            background: #e2e8f0;
-            border: 1px solid #cbd5e1;
-            padding: 9px 18px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: #475569;
+        .stat {
+            flex: 1;
+            padding: 14px 20px;
+            border-right: 1px solid #e2e8f0;
         }
 
-        .tab-btn.active {
-            background: #2b6cb0;
-            color: #ffffff;
-            border-color: #2b6cb0;
+        .stat:last-child { border-right: none; }
+
+        .stat strong {
+            display: block;
+            font-size: 22px;
+            color: #111;
+        }
+
+        .stat span {
+            font-size: 13px;
+            color: #666;
         }
 
         .tab-panel {
@@ -77,20 +191,22 @@
 
         .tab-panel.active {
             display: block;
+            animation: fadeIn .2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-box {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 24px;
-            max-width: 550px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            max-width: 420px;
         }
 
         .form-box h3 {
             margin-bottom: 15px;
-            color: #2b6cb0;
+            color: #111;
+            font-size: 17px;
         }
 
         .form-group {
@@ -100,327 +216,413 @@
         .form-group label {
             display: block;
             margin-bottom: 6px;
-            font-size: 0.88rem;
+            font-size: 14px;
             font-weight: bold;
             color: #4a5568;
         }
 
-        .form-group input, 
+        .form-group input,
         .form-group select {
             width: 100%;
             padding: 9px 10px;
             border: 1px solid #cbd5e1;
             border-radius: 4px;
-            font-size: 0.95rem;
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' stroke='%23555' stroke-width='1.6' fill='none' fill-rule='evenodd'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 34px;
+            cursor: pointer;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #2b6cb0;
+            border-color: #1a365d;
         }
 
         .btn-submit {
-            background-color: #2b6cb0;
+            background-color: #1a365d;
             color: #ffffff;
             border: none;
             padding: 10px 18px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 15px;
             font-weight: bold;
             width: 100%;
         }
 
         .btn-submit:hover {
-            background-color: #2c5282;
+            background-color: #12233d;
         }
 
         .table-section {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 34px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e2e8f0;
             overflow-x: auto;
+        }
+
+        .table-section:last-child {
+            border-bottom: none;
         }
 
         .table-section h3 {
             margin-bottom: 12px;
-            color: #1a365d;
-            font-size: 1.1rem;
+            color: #111;
+            font-size: 17px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            border: 1px solid #e2e8f0;
-            padding: 10px 12px;
-            text-align: left;
+            font-size: 14px;
         }
 
         th {
-            background-color: #f8fafc;
-            color: #333155;
-            font-weight: 600;
+            text-align: left;
+            padding: 8px 16px 8px 0;
+            border-bottom: 2px solid #222;
+            color: #333;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 10px 16px 10px 0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.8rem;
             font-weight: bold;
         }
 
-        .badge-paid { background: #dcfce7; color: #166534; }
-        .badge-unpaid { background: #fee2e2; color: #991b1b; }
-        .badge-resolved { background: #dcfce7; color: #166534; }
-        .badge-progress { background: #e0f2fe; color: #0369a1; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-paid { color: #166534; }
+        .badge-unpaid { color: #991b1b; }
+        .badge-resolved { color: #166534; }
+        .badge-progress { color: #1e40af; }
+        .badge-pending { color: #854d0e; }
 
         .actions-cell {
             display: flex;
-            gap: 6px;
+            gap: 14px;
             align-items: center;
         }
 
         .btn-status {
-            padding: 4px 8px;
             text-decoration: none;
-            font-size: 0.8rem;
-            border-radius: 3px;
+            font-size: 13px;
             font-weight: bold;
-            display: inline-block;
         }
 
-        .btn-progress {
-            background-color: #0284c7;
-            color: white;
+        .btn-status:hover {
+            text-decoration: underline;
         }
 
-        .btn-progress:hover {
-            background-color: #0369a1;
-        }
-
-        .btn-resolve {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .btn-resolve:hover {
-            background-color: #059669;
-        }
+        .btn-progress { color: #1e40af; }
+        .btn-resolve { color: #166534; }
 
         footer {
-            background: #ffffff;
             border-top: 1px solid #e2e8f0;
             text-align: center;
             padding: 16px;
-            font-size: 0.85rem;
-            color: #718096;
-            margin-top: auto;
+            font-size: 13px;
+            color: #777;
+        }
+
+        @media (max-width: 800px) {
+            .nav ul { display: none; }
+
+            .side-rail {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 40;
+                background: #fff;
+            }
+
+            .backdrop.show {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, .35);
+                z-index: 35;
+            }
+
+            .stats { flex-wrap: wrap; }
+
+            .stat {
+                flex: 1 1 50%;
+                border-bottom: 1px solid #e2e8f0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="/">PowerPay Admin</a>
-        <a href="/">&larr; Back to Home</a>
-    </nav>
+    <div class="nav">
+        <a class="brand" href="/">
+            <img src="{{ url_for('static', filename='images/logo/ebms-logo.png') }}" alt="">
+            <span>PowerPay</span>
+        </a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/consumer">Pay Bill</a></li>
+            <li><a href="/complaints">Complaints</a></li>
+            <li><a href="/admin" class="active">Admin</a></li>
+        </ul>
+        <a class="logoutbtn" href="/logout">Logout</a>
+    </div>
 
-    <div class="container">
-        <h2 class="title">Admin Control Dashboard</h2>
+    <button class="side-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+        <span></span><span></span><span></span>
+    </button>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('tab-add', this)">1. Add Consumer</button>
-            <button class="tab-btn" onclick="showTab('tab-bill', this)">2. Generate Bill</button>
-            <button class="tab-btn" onclick="showTab('tab-data', this)">3. View Database Records</button>
-        </div>
+    <div class="app">
+        <aside class="side-rail" id="sideRail">
+            <div class="side-label">Admin Panel</div>
+            <button class="side-link {% if active_tab == 'tab-add' %}active{% endif %}" onclick="showTab('tab-add', this)">Add Consumer</button>
+            <button class="side-link {% if active_tab == 'tab-bill' %}active{% endif %}" onclick="showTab('tab-bill', this)">Generate Bill</button>
+            <button class="side-link {% if active_tab == 'tab-data' %}active{% endif %}" onclick="showTab('tab-data', this)">Records</button>
+        </aside>
 
-        <div id="tab-add" class="tab-panel active">
-            <div class="form-box">
-                <h3>Register Consumer</h3>
-                <form method="POST">
-                    <div class="form-group">
-                        <label>Consumer Full Name</label>
-                        <input type="text" name="name" placeholder="e.g. Ramesh Sharma" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Meter Number</label>
-                        <input type="text" name="meter_no" placeholder="e.g. MTR-1001" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" name="address" placeholder="e.g. Flat 204, Green Park" required>
-                    </div>
-                    <button type="submit" name="add_consumer" class="btn-submit">Add Consumer</button>
-                </form>
-            </div>
-        </div>
+        <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
 
-        <div id="tab-bill" class="tab-panel">
-            <div class="form-box">
-                <h3>Generate Monthly Bill</h3>
-                <form method="POST">
-                    <div class="form-group">
-                        <label>Select Consumer</label>
-                        <select name="consumer_id" required>
-                            <option value="">-- Choose Consumer --</option>
-                            {% for c in consumers %}
-                                <option value="{{ c.id }}">{{ c.name }} (Meter: {{ c.meter_no }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Billing Month</label>
-                        <input type="month" name="month" onclick="this.showPicker()" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Units Consumed (kWh)</label>
-                        <input type="number" name="units" min="0" placeholder="e.g. 150" required>
-                    </div>
-                    <button type="submit" name="generate_bill" class="btn-submit">Generate Bill</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="tab-data" class="tab-panel">
-            
-            <div class="table-section">
-                <h3>Registered Consumers ({{ consumers|length }})</h3>
-                {% if consumers %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Meter No</th>
-                            <th>Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for c in consumers %}
-                        <tr>
-                            <td>{{ c.id }}</td>
-                            <td>{{ c.name }}</td>
-                            <td>{{ c.meter_no }}</td>
-                            <td>{{ c.address }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p style="color: #64748b; font-size: 0.9rem;">No consumers added yet.</p>
-                {% endif %}
+        <div class="main">
+            <div class="topbar">
+                <h2 class="title">Admin Control Dashboard</h2>
             </div>
 
-            <div class="table-section">
-                <h3>Generated Bills ({{ bills|length }})</h3>
-                {% if bills %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Bill ID</th>
-                            <th>Name</th>
-                            <th>Meter No</th>
-                            <th>Month</th>
-                            <th>Units</th>
-                            <th>Amount (₹)</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for b in bills %}
-                        <tr>
-                            <td>#{{ b.id }}</td>
-                            <td>{{ b.name }}</td>
-                            <td>{{ b.meter_no }}</td>
-                            <td>{{ b.month }}</td>
-                            <td>{{ b.units }}</td>
-                            <td>₹{{ "%.2f"|format(b.amount) }}</td>
-                            <td>
-                                <span class="badge {% if b.status == 'Paid' %}badge-paid{% else %}badge-unpaid{% endif %}">
-                                    {{ b.status }}
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p style="color: #64748b; font-size: 0.9rem;">No bills generated yet.</p>
-                {% endif %}
-            </div>
+            <div class="container">
 
-            <div class="table-section">
-                <h3>Consumer Complaints ({{ complaints|length }})</h3>
-                {% if complaints %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Consumer</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Update Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cmp in complaints %}
-                        <tr>
-                            <td>#{{ cmp.id }}</td>
-                            <td>{{ cmp.name }}</td>
-                            <td>{{ cmp.category }}</td>
-                            <td>{{ cmp.description }}</td>
-                            <td>
-                                {% if cmp.status == 'Resolved' %}
-                                    <span class="badge badge-resolved">{{ cmp.status }}</span>
-                                {% elif cmp.status == 'In Progress' %}
-                                    <span class="badge badge-progress">{{ cmp.status }}</span>
-                                {% else %}
-                                    <span class="badge badge-pending">{{ cmp.status }}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="actions-cell">
-                                    {% if cmp.status != 'In Progress' and cmp.status != 'Resolved' %}
-                                        <a href="/update_complaint/{{ cmp.id }}/In Progress" class="btn-status btn-progress">In Progress</a>
-                                    {% endif %}
-                                    
-                                    {% if cmp.status != 'Resolved' %}
-                                        <a href="/update_complaint/{{ cmp.id }}/Resolved" class="btn-status btn-resolve">Resolve</a>
-                                    {% else %}
-                                        <span style="color: #64748b; font-size: 0.85rem;">Completed</span>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p style="color: #64748b; font-size: 0.9rem;">No complaints filed yet.</p>
-                {% endif %}
-            </div>
+                <div class="stats">
+                    <div class="stat">
+                        <strong>{{ consumers|length }}</strong>
+                        <span>Consumers</span>
+                    </div>
+                    <div class="stat">
+                        <strong>{{ bills|length }}</strong>
+                        <span>Bills Generated</span>
+                    </div>
+                    <div class="stat">
+                        <strong>{{ bills|selectattr('status', 'equalto', 'Unpaid')|list|length }}</strong>
+                        <span>Unpaid Bills</span>
+                    </div>
+                    <div class="stat">
+                        <strong>{{ complaints|rejectattr('status', 'equalto', 'Resolved')|list|length }}</strong>
+                        <span>Open Complaints</span>
+                    </div>
+                </div>
 
+                <div id="tab-add" class="tab-panel {% if active_tab == 'tab-add' %}active{% endif %}">
+                    <div class="form-box">
+                        <h3>Register Consumer</h3>
+                        <form method="POST">
+                            <div class="form-group">
+                                <label>Consumer Full Name</label>
+                                <input type="text" name="name" placeholder="e.g. Ramesh Sharma" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Meter Number</label>
+                                <input type="text" name="meter_no" placeholder="e.g. MTR-1001" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" name="address" placeholder="e.g. Flat 204, Green Park" required>
+                            </div>
+                            <button type="submit" name="add_consumer" class="btn-submit">Add Consumer</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="tab-bill" class="tab-panel {% if active_tab == 'tab-bill' %}active{% endif %}">
+                    <div class="form-box">
+                        <h3>Generate Monthly Bill</h3>
+                        <form method="POST">
+                            <div class="form-group">
+                                <label>Select Consumer</label>
+                                <select name="consumer_id" required>
+                                    <option value="">-- Choose Consumer --</option>
+                                    {% for c in consumers %}
+                                        <option value="{{ c.id }}">{{ c.name }} (Meter: {{ c.meter_no }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Billing Month</label>
+                                <input type="month" name="month" onclick="this.showPicker()" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Units Consumed (kWh)</label>
+                                <input type="number" name="units" min="0" placeholder="e.g. 150" required>
+                            </div>
+                            <button type="submit" name="generate_bill" class="btn-submit">Generate Bill</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="tab-data" class="tab-panel {% if active_tab == 'tab-data' %}active{% endif %}">
+
+                    <div class="table-section">
+                        <h3>Registered Consumers ({{ consumers|length }})</h3>
+                        {% if consumers %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Meter No</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in consumers %}
+                                <tr>
+                                    <td>{{ c.id }}</td>
+                                    <td>{{ c.name }}</td>
+                                    <td>{{ c.meter_no }}</td>
+                                    <td>{{ c.address }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p style="color: #666; font-size: 14px;">No consumers added yet.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Generated Bills ({{ bills|length }})</h3>
+                        {% if bills %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Name</th>
+                                    <th>Meter No</th>
+                                    <th>Month</th>
+                                    <th>Units</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for b in bills %}
+                                <tr>
+                                    <td>#{{ b.id }}</td>
+                                    <td>{{ b.name }}</td>
+                                    <td>{{ b.meter_no }}</td>
+                                    <td>{{ b.month }}</td>
+                                    <td>{{ b.units }}</td>
+                                    <td>₹{{ "%.2f"|format(b.amount) }}</td>
+                                    <td>
+                                        <span class="badge {% if b.status == 'Paid' %}badge-paid{% else %}badge-unpaid{% endif %}">
+                                            {{ b.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p style="color: #666; font-size: 14px;">No bills generated yet.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Consumer Complaints ({{ complaints|length }})</h3>
+                        {% if complaints %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Consumer</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Update Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cmp in complaints %}
+                                <tr>
+                                    <td>#{{ cmp.id }}</td>
+                                    <td>{{ cmp.name }}</td>
+                                    <td>{{ cmp.category }}</td>
+                                    <td>{{ cmp.description }}</td>
+                                    <td>
+                                        {% if cmp.status == 'Resolved' %}
+                                            <span class="badge badge-resolved">{{ cmp.status }}</span>
+                                        {% elif cmp.status == 'In Progress' %}
+                                            <span class="badge badge-progress">{{ cmp.status }}</span>
+                                        {% else %}
+                                            <span class="badge badge-pending">{{ cmp.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="actions-cell">
+                                            {% if cmp.status != 'In Progress' and cmp.status != 'Resolved' %}
+                                                <a href="/update_complaint/{{ cmp.id }}/In Progress" class="btn-status btn-progress">In Progress</a>
+                                            {% endif %}
+
+                                            {% if cmp.status != 'Resolved' %}
+                                                <a href="/update_complaint/{{ cmp.id }}/Resolved" class="btn-status btn-resolve">Resolve</a>
+                                            {% else %}
+                                                <span style="color: #666; font-size: 13px;">Completed</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p style="color: #666; font-size: 14px;">No complaints filed yet.</p>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <footer>
+        PowerPay Admin &copy; 2026
+    </footer>
 
     <script>
         function showTab(tabId, btn) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.side-link').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
+
+            fetch('/admin/set_tab/' + tabId, { method: 'POST' }).catch(function () {});
         }
+
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sideRail');
+            var collapsed = sidebar.classList.toggle('collapsed');
+            document.getElementById('backdrop').classList.toggle('show', !collapsed);
+            try { localStorage.setItem('admin_sidebar_collapsed', collapsed ? '1' : '0'); } catch (e) {}
+        }
+
+        (function () {
+            try {
+                var sidebar = document.getElementById('sideRail');
+                var saved = localStorage.getItem('admin_sidebar_collapsed');
+                var shouldCollapse = saved === '1' || (saved === null && window.innerWidth <= 800);
+                if (shouldCollapse) sidebar.classList.add('collapsed');
+            } catch (e) {}
+        })();
     </script>
 
 </body>
