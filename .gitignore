@@ -17,3 +17,5 @@ env/
 Thumbs.db
 
 logs/
+
+frontend/node_modules/
