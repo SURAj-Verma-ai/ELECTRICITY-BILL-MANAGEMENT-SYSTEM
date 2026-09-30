@@ -140,15 +140,15 @@ export default function Admin({ isAdmin, onLogout }) {
                 <form onSubmit={handleAddConsumer}>
                   <div className="form-group">
                     <label>Consumer Full Name</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Ramesh Sharma" required />
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="SURAJ VERMA" required />
                   </div>
                   <div className="form-group">
                     <label>Meter Number</label>
-                    <input type="text" value={meterNo} onChange={e => setMeterNo(e.target.value)} placeholder="e.g. MTR-1001" required />
+                    <input type="text" value={meterNo} onChange={e => setMeterNo(e.target.value)} placeholder="MTR-2201110" required />
                   </div>
                   <div className="form-group">
                     <label>Address</label>
-                    <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="e.g. Flat 204, Green Park" required />
+                    <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="GARDENIA APRTMENT 204, DELHI" required />
                   </div>
                   <button type="submit" className="btn-submit">Add Consumer</button>
                 </form>
