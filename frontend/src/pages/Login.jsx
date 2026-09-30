@@ -47,6 +47,13 @@ export default function Login({ onLoggedIn }) {
             </div>
             <button type="submit" className="btn-submit">Login</button>
           </form>
+          <div className ="SytemInfo">
+            <p>System Information:</p>
+            <ul>
+              <li>THis is a simple system info for Electric Utility Management which generates bill and payment records.</li>
+              <li>This helps the admin and users manage their power payments efficiently.</li>
+            </ul>
+          </div>
 
           <Link to="/" className="back-link">Back to Home</Link>
         </div>

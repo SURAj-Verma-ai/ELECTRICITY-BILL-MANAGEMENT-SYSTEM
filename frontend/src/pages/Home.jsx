@@ -24,15 +24,6 @@ export default function Home({ isAdmin, onLogout }) {
         <div><strong>1200-123456</strong><span>Toll-free customer care, all days</span></div>
         <div><strong>48 hrs</strong><span>Average complaint resolution time</span></div>
       </div>
-
-      <div className="foot">
-        <div>&copy; 2026 PowerPay</div>
-        <div>
-          <Link to="/consumer">Pay Bill</Link>
-          <Link to="/complaints">Complaints</Link>
-          <Link to="/admin">Admin</Link>
-        </div>
-      </div>
     </>
   )
 }
